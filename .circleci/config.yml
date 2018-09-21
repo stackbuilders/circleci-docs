@@ -3,7 +3,6 @@ jobs:
   build:
     docker:
       - image: cibuilds/jekyll:3.8.3
-    working_directory: ~/circleci-docs
     environment:
       JEKYLL_ENV: production
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
@@ -53,7 +52,7 @@ jobs:
           path: run-results/
           destination: run-results
       - persist_to_workspace:
-          root: ~/circleci-docs/jekyll/_site 
+          root: ~/project/jekyll/_site 
           paths: 
             - docs
   deploy:

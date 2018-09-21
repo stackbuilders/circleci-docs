@@ -25,7 +25,7 @@ jobs:
           key: circleci-docs-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
       - run:
           name: Install Ruby dependencies
-          command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
+          command: bundle install
       - save_cache:
           key: circleci-docs-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
           paths:
@@ -44,7 +44,7 @@ jobs:
           command: bundle exec jekyll build --config jekyll/_config.yml,jekyll/_config_production.yml --source jekyll --destination jekyll/_site/docs/ 2>&1 | tee $JOB_RESULTS_PATH/build-results.txt
       - run:
           name: Test with HTMLproofer
-          command: bundle exec htmlproofer jekyll/_site --allow-hash-href --check-favicon --check-html --disable-external --empty-alt-ignore | tee $JOB_RESULTS_PATH/htmlproofer-results.txt
+          command: htmlproofer jekyll/_site --allow-hash-href --check-favicon --check-html --disable-external --empty-alt-ignore | tee $JOB_RESULTS_PATH/htmlproofer-results.txt
       - store_artifacts: 
           path: jekyll/_site/docs/
           destination: circleci-docs

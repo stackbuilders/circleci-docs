@@ -509,7 +509,7 @@ For more detailed information about this orb, refer to the [CircleCI Google Clou
 
 ## Hapistrano
 
-[Hapistrano](https://github.com/stackbuilders/hapistrano) is a deployment library based on Haskell similar to Ruby's Capistrano. Hapistrano (like Capistrano for Ruby) deploys applications to a new directory marked with a timestamp on the remote host. It creates this new directory quickly by placing a git repository for caching purposes on the remote server. Hapistrano uses a yml deploy file to perform tasks on the remote servers.
+[Hapistrano](https://github.com/stackbuilders/hapistrano) is a deployment library written in Haskell similar to [Capistrano](https://capistranorb.com). Hapistrano deploys applications to a new directory marked with a timestamp on the remote host. It creates this new directory quickly by placing a git repository for caching purposes on the remote server. Hapistrano image is available at [Docker Hub](https://hub.docker.com/r/stackbuilders/hapistrano)
 
 ```yaml
 
@@ -524,27 +524,21 @@ jobs:
       - deploy:
           name: Deploy
           command:
-            hap deploy -c deploy/deploy-file.yaml
+            hap deploy -c hap.yml
 
 ```
-Here's an example of a deploy file.
+Hapistrano looks for a configuration file called `hap.yaml` that typically looks like this:
 
 ```yaml
 ---
-deploy_path: /path/to/deploy
-host: user@remote.server
-repo: git@github.com:project/repository.git
+deploy_path: /path/to/app
+host: example.com
+repo: https://github.com/stackbuilders/hapistrano.git
 revision: origin/master
-#Number of releases to keep in the remote server
-keep_releases: 3
-#Set of commands that your application needs to build.
 build_script:
-  - command 1
-  - command 2
-  - ...
-  - command n
-#Command that your application need to run.
-restart_command:
+  - stack setup
+  - stack build
+restart_command: systemd restart app.service
 ```
 
 ## Heroku
